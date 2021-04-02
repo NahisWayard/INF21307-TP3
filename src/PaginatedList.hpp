@@ -11,6 +11,8 @@ public:
     typedef Node<T, N> NodeType;
 
     explicit PaginatedList() {
+        if (N >= UINTMAX_MAX)
+            throw std::invalid_argument("N must be inferior to UINTMAX_MAX");
         head = new NodeType();
     }
 
@@ -39,15 +41,38 @@ public:
     };
 
     size_t findOne(T item) {
-
+        size_t res = -1;
+        for (auto *p = head; p != nullptr; p = p->links[Link::NEXT]) {
+            for (size_t idx = 0; idx < N; idx++) {
+                if (p->isUsed(idx)) {
+                    res++;
+                    if (item == p->get(idx))
+                        return res;
+                }
+            }
+        }
+        return UINTMAX_MAX;
     };
 
     std::vector<size_t> findMany(std::function<bool (T &item)> criteria) {
+        std::vector<size_t> res = {};
+        size_t id = -1;
 
+        for (auto *p = head; p != nullptr; p = p->links[Link::NEXT]) {
+            for (size_t idx = 0; idx < N; idx++) {
+                if (p->isUsed(idx)) {
+                    id++;
+                    if (criteria(p->get(idx)))
+                        res.push_back(id);
+                }
+            }
+        }
+        return res;
     };
 
     T &get(size_t index) {
         auto *p = head;
+        //TODO Works only when pages are full ???
         size_t slots = p->usedSlots();
 
         while (index >= slots) {

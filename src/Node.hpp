@@ -36,6 +36,10 @@ public:
         return data[idx];
     }
 
+    bool isUsed(size_t idx) {
+        return capacity[idx];
+    }
+
 private:
     size_t firstAvailableIndex() const {
         for (size_t i = 0; i < N; i++) {
