@@ -74,8 +74,14 @@ public:
         auto *p = head;
         //TODO Works only when pages are full ???
         size_t slots = p->usedSlots();
+        std::cout << "toto" << std::endl;
+        std::cout << slots << std::endl;
 
         while (index >= slots) {
+            std::cout << "index" << std::endl;
+            std::cout << index << std::endl;
+            std::cout << "slots" << std::endl;
+            std::cout << slots << std::endl;
             index -= slots;
             p = p->links[Link::NEXT];
             slots = p->usedSlots();
@@ -85,7 +91,18 @@ public:
     };
 
     void remove(size_t index) {
+        auto *p = head;
+        size_t a = 0;
 
+        // TODO gerer le cas si il y a un seul element dans la page cad supprimer la page
+        for (auto *i = head; p != nullptr; (p = p->links[Link::NEXT])){    
+            for (std::size_t i = 0; i < p->getCapacity().size(); (i++) && (a++)) {
+                if (a == index) {
+                    p->setBitOnCapacity(i, false);    
+                    return;
+                }
+            }
+        }
     };
 
     void compact() {

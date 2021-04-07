@@ -32,6 +32,14 @@ public:
         return capacity.count();
     }
 
+    std::bitset<N> getCapacity() const {
+        return capacity;
+    }
+
+    void setBitOnCapacity(size_t pos, bool bitValue) {
+        capacity[pos] = bitValue;
+    }
+
     T &get(size_t idx) {
         return data[idx];
     }
@@ -53,7 +61,7 @@ public:
     Node<T, N> *links[2];
 private:
     std::bitset<N> capacity;
-    T data[N];
+    T data[N]; // int data[10]
 
 };
 
