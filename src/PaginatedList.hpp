@@ -74,14 +74,8 @@ public:
         auto *p = head;
         //TODO Works only when pages are full ???
         size_t slots = p->usedSlots();
-        std::cout << "toto" << std::endl;
-        std::cout << slots << std::endl;
 
         while (index >= slots) {
-            std::cout << "index" << std::endl;
-            std::cout << index << std::endl;
-            std::cout << "slots" << std::endl;
-            std::cout << slots << std::endl;
             index -= slots;
             p = p->links[Link::NEXT];
             slots = p->usedSlots();

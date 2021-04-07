@@ -61,8 +61,7 @@ public:
     Node<T, N> *links[2];
 private:
     std::bitset<N> capacity;
-    T data[N]; // int data[10]
-
+    T data[N];
 };
 
 #endif
