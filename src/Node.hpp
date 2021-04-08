@@ -21,6 +21,13 @@ public:
         return !capacity.all();
     }
 
+    bool isEmpty() const {
+        if (capacity == 0) {
+            return true;
+        }
+        return false;
+    }
+
     void append(T item) {
         auto idx = firstAvailableIndex();
 
@@ -37,21 +44,33 @@ public:
     }
 
     void setBitOnCapacity(size_t pos, bool bitValue) {
-        capacity[pos] = bitValue;
+        capacity[pos] = bitValue; 
     }
 
     T &get(size_t idx) {
         return data[idx];
     }
 
-    bool isUsed(size_t idx) {
+    void setDataByIndex(size_t idx, T nData) {
+        data[idx] = nData;
+    }
+
+    bool isUsed(size_t idx) const {
         return capacity[idx];
     }
 
-private:
+//private:
     size_t firstAvailableIndex() const {
         for (size_t i = 0; i < N; i++) {
             if (!capacity[i])
+                return i;
+        }
+        return UINTMAX_MAX;
+    }
+
+    size_t lastFilledIndex() const {
+        for (size_t i = N; i >= 0; i--) {
+            if (isUsed(i) == true)
                 return i;
         }
         return UINTMAX_MAX;

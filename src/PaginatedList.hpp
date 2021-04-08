@@ -84,24 +84,138 @@ public:
         return p->get(index);
     };
 
+    NodeType *getFirstEmptyPage(){
+        auto *p = head;
+         while (p->hasAvailableSpace() > 0) {
+            p = p->links[Link::NEXT];
+         }
+         return p;
+    }
+
+    NodeType *getTail(){
+        auto *p = head;
+        
+        while (p->links[Link::NEXT] != nullptr) {
+            p = p->links[Link::NEXT];            
+        } 
+        return p;
+    }
+
+    NodeType *getLastEmptyPage(){
+        auto *p = this->getTail();
+
+        while (p != head) {
+            if (p->hasAvailableSpace() == false){
+                return p;
+            }
+            p = p->links[Link::PREVIOUS];
+        }
+        return p;
+    }
+
     void remove(size_t index) {
         auto *p = head;
         size_t a = 0;
 
         // TODO gerer le cas si il y a un seul element dans la page cad supprimer la page
         for (auto *i = head; p != nullptr; (p = p->links[Link::NEXT])){    
-            for (std::size_t i = 0; i < p->getCapacity().size(); (i++) && (a++)) {
+            for (std::size_t i = 0; i < p->getCapacity().size(); i++) {
                 if (a == index) {
                     p->setBitOnCapacity(i, false);    
                     return;
                 }
+                a++;
             }
         }
     };
 
-    void compact() {
+    NodeType *getFirstPageToPlaceItem(){
+        for (auto *p = head; p != nullptr; (p = p->links[Link::NEXT])){
+            if (p->hasAvailableSpace() == true){
+                return p;
+            }
+        }
+        return nullptr;
+    }
 
+    void compactPage(Node<T, N> *p) {
+
+        T tmpItem = 0;
+        size_t toFill = p->firstAvailableIndex();
+        size_t toPlace = p->lastFilledIndex();
+
+            while (toFill < toPlace) {
+                tmpItem = p->get(toPlace);
+                p->setDataByIndex(toFill, tmpItem);
+                p->setBitOnCapacity(toFill, true);
+                p->setBitOnCapacity(toPlace, false);
+                toPlace = p->lastFilledIndex();
+                toFill = p->firstAvailableIndex();
+            }
+    }
+
+    void compact() {
+       // Supprimer les page vides 
+       auto *t = this->getTail();
+       auto *h = head;
+       
+       T tmpItem = 0;
+       size_t toFill = 0;
+       size_t toPlace = 0;
+
+       for (auto *p = head; p != nullptr; (p = p->links[Link::NEXT])){
+           this->compactPage(p);
+       }
+
+       while (this->getFirstPageToPlaceItem() != t && 
+                this->getFirstPageToPlaceItem() != nullptr) {
+
+            h = this->getFirstPageToPlaceItem();
+           
+            toFill = h->firstAvailableIndex();
+            toPlace = t->lastFilledIndex();
+
+            tmpItem = t->get(toPlace);
+            h->setDataByIndex(toFill, tmpItem);
+            h->setBitOnCapacity(toFill, true);
+            t->setBitOnCapacity(toPlace, false);
+
+            if (t->isEmpty() == true) {
+                t = t->links[Link::PREVIOUS];
+            }
+       }
     };
+
+    void printPagesAndItems(){
+        size_t page = 0;
+        size_t absoluteIdx = 0;
+
+        std::cout << std::endl;
+        for (auto *p = head; p != nullptr; (p = p->links[Link::NEXT])){
+            std::cout << "-------------" << std::endl;
+            std::cout << std::endl;
+            std::cout << "[ PAGE " << page << " ]"<< std::endl;
+            std::cout << std::endl;
+
+            for (std::size_t i = 0; i < p->getCapacity().size(); i++) {
+                if (p->getCapacity()[i] == true) {
+                    std::cout << "|" << absoluteIdx << "| " <<"[" << i << "] - " << p->get(i) << " -" << std::endl;
+                } 
+                else {
+                    std::cout << "|" << absoluteIdx << "| " << "[" << i << "] - EMPTY -" << std::endl;
+                }
+                absoluteIdx++; 
+            }
+
+            std::cout << "-------------" << std::endl;
+            std::cout << std::endl;
+            page++;
+        }
+        std::cout << "Page count: " << this->getPageCount() << std::endl;
+        std::cout << "Item count: " << this->getItemCount() << std::endl;
+        std::cout << "----------------------------------------------------" << std::endl;
+        std::cout << std::endl;
+    }
 
     size_t getPageCount() {
         size_t res = 1;
