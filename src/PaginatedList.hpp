@@ -154,8 +154,32 @@ public:
             }
     }
 
+    // Fonction temporaire qui unlink une page pas de liberation de memoire
+    // la partie du code qui unlink une page au milieu n'a pas etait teste 
+    void unlinkPage(Node<T, N> *p){
+        
+        Node<T, N> *tmp = p; 
+
+        if (p == head) {
+            return;
+        }
+
+        if (p == this->getTail()){
+            tmp = p->links[Link::PREVIOUS];
+            tmp->links[Link::NEXT] = nullptr;
+            p->links[Link::NEXT] = nullptr;
+            return;
+        }
+
+        tmp = p->links[Link::PREVIOUS];
+        tmp->links[Link::NEXT] = p->links[Link::NEXT];
+        p->links[Link::NEXT]->links[Link::PREVIOUS] = tmp;
+        p->links[Link::NEXT] = nullptr;
+        p->links[Link::PREVIOUS] = nullptr;
+        return;
+    }
+
     void compact() {
-       // Supprimer les page vides 
        auto *t = this->getTail();
        auto *h = head;
        
@@ -182,6 +206,7 @@ public:
 
             if (t->isEmpty() == true) {
                 t = t->links[Link::PREVIOUS];
+                this->unlinkPage(t->links[Link::NEXT]); // TODO fonction temporaire a remplacer
             }
        }
     };
