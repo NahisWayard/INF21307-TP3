@@ -113,19 +113,18 @@ public:
         return p;
     }
 
-    void remove(size_t index) {
-        auto *p = head;
-        size_t a = 0;
+    void remove(size_t indexToRemove) {
+        for (auto *p = head; p != nullptr; (p = p->links[Link::NEXT])){
+            size_t usedSlots = p->usedSlots();
 
-        // TODO gerer le cas si il y a un seul element dans la page cad supprimer la page
-        for (auto *i = head; p != nullptr; (p = p->links[Link::NEXT])){
-            for (std::size_t i = 0; i < p->getCapacity().size(); i++) {
-                if (a == index) {
-                    p->setBitOnCapacity(i, false);
-                    return;
-                }
-                a++;
+            if (indexToRemove >= usedSlots) {
+                indexToRemove -= usedSlots;
+                continue;
             }
+
+            size_t intIdx = p->getInternalIndex(indexToRemove);
+            p->setBitOnCapacity(intIdx, false);
+            break;
         }
     };
 
