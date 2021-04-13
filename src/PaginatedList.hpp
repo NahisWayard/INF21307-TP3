@@ -47,7 +47,7 @@ public:
 
         for (auto *p = head; p != nullptr; p = p->links[Link::NEXT]) {
             for (size_t intIndex = 0; intIndex < N; intIndex++) {
-                if (!p->isUsed(intIndex))
+                if (!p->capacity[intIndex])
                     continue;
                 res++;
                 if (item == p->data[intIndex])
@@ -63,7 +63,7 @@ public:
 
         for (auto *p = head; p != nullptr; p = p->links[Link::NEXT]) {
             for (size_t intIndex = 0; intIndex < N; intIndex++) {
-                if (p->isUsed(intIndex)) {
+                if (p->capacity[intIndex]) {
                     id++;
                     if (criteria(p->data[intIndex]))
                         res.push_back(id);
@@ -112,7 +112,9 @@ public:
     size_t getItemCount() {
         size_t res = 0;
 
-        for (auto *p = head; p != nullptr; (res += p->usedSlots()) && (p = p->links[Link::NEXT]));
+        for (auto *p = head; p != nullptr; p = p->links[Link::NEXT]) {
+            res += p->usedSlots();
+        }
         return res;
     };
 
@@ -156,7 +158,13 @@ public:
         size_t toPlace = 0;
 
         for (auto *p = head; p != nullptr; (p = p->links[Link::NEXT])){
-            this->compactPage(p);
+            if (!p->isEmpty())
+                this->compactPage(p);
+            else if (p != head){
+                auto *prev = p->links[PREVIOUS];
+                this->unlinkPage(p);
+                p = prev;
+            }
         }
 
         while (this->getFirstPageToPlaceItem() != t &&
