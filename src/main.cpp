@@ -2,12 +2,11 @@
 #include "PaginatedList.hpp"
 
 int main(int ac, char **av) {
-    auto list = PaginatedList<int>();
-    size_t itemsToTest = 42;
-    //size_t itemsToTest = 20;
+    auto list = PaginatedList<int, 10>();
+    size_t itemsToTest = 20;
 
     for (size_t i = 0; i < itemsToTest; i++) {
-        list.append(i + 1);
+        list.append(i);
     }
 
     /*for (size_t i = 0; i < itemsToTest; i++) {
@@ -18,7 +17,7 @@ int main(int ac, char **av) {
     std::cout << "Item count: " << list.getItemCount() << std::endl;*/
 
 
-
+/*
     list.remove(2);
     list.remove(3);
     list.remove(4);
@@ -37,13 +36,29 @@ int main(int ac, char **av) {
     list.compact();
     list.printPagesAndItems();
 
-    //std::cout << 
+    //std::cout <<
     //list.getLastEmptyPage();
+*/
 
-    std::cout << "Idx for 3: " << list.findOne(42) << std::endl;
-    std::cout << "Size of find many: " << list.findMany([] (int item) {
+/*
+    list.remove(0);
+    list.remove(2);
+    list.remove(4);
+    list.remove(6);
+    list.remove(8);
+    list.remove(10);
+*/
+    list.remove(5);
+    list.printPagesAndItems();
+    std::cout << "6 == " << list.get(5) << std::endl;
+    std::cout << "7 == " << list.get(6) << std::endl;
+    std::cout << "0 == " << list.get(0) << std::endl;
+    std::cout << "4 == " << list.get(4) << std::endl;
+
+
+    /* std::cout << "Size of find many: " << list.findMany([] (int item) {
         if (item == 40 || item == 13)
             return true;
         return false;
-    }).size() << std::endl;
+    }).size() << std::endl; */
 }

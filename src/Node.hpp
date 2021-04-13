@@ -15,6 +15,13 @@ public:
         std::cout << "New page" << std::endl;
         links[PREVIOUS] = nullptr;
         links[NEXT] = nullptr;
+        capacity.reset();
+    }
+
+    virtual ~Node() {
+        std::cout << "Deleted page" << std::endl;
+        if (links[NEXT] != nullptr)
+            delete links[NEXT];
     }
 
     bool hasAvailableSpace() const {
@@ -44,11 +51,17 @@ public:
     }
 
     void setBitOnCapacity(size_t pos, bool bitValue) {
-        capacity[pos] = bitValue; 
+        capacity[pos] = bitValue;
     }
 
     T &get(size_t idx) {
-        return data[idx];
+        size_t offset = 0;
+
+        for (size_t i = 0; i < capacity.size() && i < idx; i++) {
+            if (capacity[i] == false)
+                offset++;
+        }
+        return data[idx + offset];
     }
 
     void setDataByIndex(size_t idx, T nData) {
@@ -76,6 +89,9 @@ public:
         return UINTMAX_MAX;
     }
 
+    const T *getData() const {
+        return data;
+    }
 public:
     Node<T, N> *links[2];
 private:

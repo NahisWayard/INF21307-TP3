@@ -94,10 +94,10 @@ public:
 
     NodeType *getTail(){
         auto *p = head;
-        
+
         while (p->links[Link::NEXT] != nullptr) {
-            p = p->links[Link::NEXT];            
-        } 
+            p = p->links[Link::NEXT];
+        }
         return p;
     }
 
@@ -118,10 +118,10 @@ public:
         size_t a = 0;
 
         // TODO gerer le cas si il y a un seul element dans la page cad supprimer la page
-        for (auto *i = head; p != nullptr; (p = p->links[Link::NEXT])){    
+        for (auto *i = head; p != nullptr; (p = p->links[Link::NEXT])){
             for (std::size_t i = 0; i < p->getCapacity().size(); i++) {
                 if (a == index) {
-                    p->setBitOnCapacity(i, false);    
+                    p->setBitOnCapacity(i, false);
                     return;
                 }
                 a++;
@@ -155,10 +155,10 @@ public:
     }
 
     // Fonction temporaire qui unlink une page pas de liberation de memoire
-    // la partie du code qui unlink une page au milieu n'a pas etait teste 
+    // la partie du code qui unlink une page au milieu n'a pas etait teste
     void unlinkPage(Node<T, N> *p){
-        
-        Node<T, N> *tmp = p; 
+
+        Node<T, N> *tmp = p;
 
         if (p == head) {
             return;
@@ -182,7 +182,7 @@ public:
     void compact() {
        auto *t = this->getTail();
        auto *h = head;
-       
+
        T tmpItem = 0;
        size_t toFill = 0;
        size_t toPlace = 0;
@@ -191,11 +191,11 @@ public:
            this->compactPage(p);
        }
 
-       while (this->getFirstPageToPlaceItem() != t && 
+       while (this->getFirstPageToPlaceItem() != t &&
                 this->getFirstPageToPlaceItem() != nullptr) {
 
             h = this->getFirstPageToPlaceItem();
-           
+
             toFill = h->firstAvailableIndex();
             toPlace = t->lastFilledIndex();
 
@@ -214,6 +214,7 @@ public:
     void printPagesAndItems(){
         size_t page = 0;
         size_t absoluteIdx = 0;
+        size_t realIdx = 0;
 
         std::cout << std::endl;
         for (auto *p = head; p != nullptr; (p = p->links[Link::NEXT])){
@@ -224,12 +225,13 @@ public:
 
             for (std::size_t i = 0; i < p->getCapacity().size(); i++) {
                 if (p->getCapacity()[i] == true) {
-                    std::cout << "|" << absoluteIdx << "| " <<"[" << i << "] - " << p->get(i) << " -" << std::endl;
-                } 
-                else {
-                    std::cout << "|" << absoluteIdx << "| " << "[" << i << "] - EMPTY -" << std::endl;
+                    std::cout << "|" << realIdx  << "| " <<"[" << i << "] - " << p->getData()[i] << " - " << absoluteIdx << std::endl;
+                    realIdx++;
                 }
-                absoluteIdx++; 
+                else {
+                    std::cout << "|X| " << "[" << i << "] - EMPTY - " << absoluteIdx << std::endl;
+                }
+                absoluteIdx++;
             }
 
             std::cout << "-------------" << std::endl;
