@@ -72,6 +72,19 @@ public:
         return capacity[idx];
     }
 
+    size_t getInternalIndex(size_t idx) {
+        if (capacity.none() || idx + 1 > capacity.count())
+            return UINTMAX_MAX;
+        if (capacity.all())
+            return idx;
+
+        for (int i = 0; i <= idx; i++) {
+            if (capacity[i] == false)
+                idx++;
+        }
+        return idx;
+    }
+
 //private:
     size_t firstAvailableIndex() const {
         for (size_t i = 0; i < N; i++) {
