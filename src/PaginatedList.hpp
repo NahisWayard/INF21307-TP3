@@ -150,6 +150,8 @@ public:
     };
 
     void compact() {
+        if (getItemCount() == 0 && getPageCount() == 1)
+            return;
         auto *t = tail;
         auto *h = head;
 

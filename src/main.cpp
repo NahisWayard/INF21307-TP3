@@ -43,8 +43,9 @@ int main() {
     for (int i = 0; i < 10; i++)
         list.remove(0);
     list.printPagesAndItems();
-    list.compact(); //Current infinite loop when compacting an empty list
+    list.compact();
     std::cout << "Should not remove the last page" << std::endl;
+    list.printPagesAndItems();
 
     try {
         list.get(25000000);
