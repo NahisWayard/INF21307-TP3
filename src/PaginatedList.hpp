@@ -174,7 +174,7 @@ public:
 
             if (t->isEmpty() == true) {
                 t = t->links[Link::PREVIOUS];
-                this->unlinkPage(t->links[Link::NEXT]); // TODO fonction temporaire a remplacer
+                this->unlinkPage(t->links[Link::NEXT]);
             }
         }
     };
@@ -226,6 +226,7 @@ private:
         p->links[Link::NEXT]->links[Link::PREVIOUS] = tmp;
         p->links[Link::NEXT] = nullptr;
         p->links[Link::PREVIOUS] = nullptr;
+        delete p;
     }
 
 private:
