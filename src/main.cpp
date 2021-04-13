@@ -3,29 +3,32 @@
 
 int main() {
     auto list = PaginatedList<int, 10>();
-    size_t itemsToTest = 20;
+    size_t itemsToTest = 30;
 
     for (size_t i = 0; i < itemsToTest; i++) {
         list.append(i);
     }
-
-
-    //list.printPagesAndItems();
-
-    list.remove(0);
-    for (int i = 0; i < 6; i++)
-        list.remove(5);
-    list.remove(10);
-
-    //list.printPagesAndItems();
-
-    list.compact();
     list.printPagesAndItems();
 
+
+    list.remove(0);
+    for (int i = 0; i < 10; i++)
+        list.remove(9);
+    std::cout << "Removed deleted all content in mid page" << std::endl;
+    list.remove(25);
+
+    list.printPagesAndItems();
+
+    list.compact();
+    std::cout << "Unlinked mid page" << std::endl;
+    list.printPagesAndItems();
+
+    /*
     list.remove(0);
     list.remove(0);
     list.compact();
     list.printPagesAndItems();
+     */
 
     try {
         std::cout << "4 == " << list.get(25000000) << std::endl;

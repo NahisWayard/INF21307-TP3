@@ -206,20 +206,18 @@ private:
         }
     }
 
-    // Fonction temporaire qui unlink une page pas de liberation de memoire
-    // la partie du code qui unlink une page au milieu n'a pas etait teste
-    void unlinkPage(Node<T, N> *p){
+    void unlinkPage(NodeType *p){
 
-        Node<T, N> *tmp = p;
+        NodeType *tmp = p;
 
-        if (p == head) {
+        if (p == head)
             return;
-        }
 
-        if (p == tail){
+        if (p == tail) {
             tmp = p->links[Link::PREVIOUS];
             tmp->links[Link::NEXT] = nullptr;
             p->links[Link::NEXT] = nullptr;
+            delete p;
             return;
         }
 
@@ -228,26 +226,6 @@ private:
         p->links[Link::NEXT]->links[Link::PREVIOUS] = tmp;
         p->links[Link::NEXT] = nullptr;
         p->links[Link::PREVIOUS] = nullptr;
-    }
-
-    NodeType *getFirstEmptyPage(){
-        auto *p = head;
-        while (p->hasAvailableSpace() > 0) {
-            p = p->links[Link::NEXT];
-        }
-        return p;
-    }
-
-    NodeType *getLastEmptyPage(){
-        auto *p = this->getTail();
-
-        while (p != head) {
-            if (p->hasAvailableSpace() == false){
-                return p;
-            }
-            p = p->links[Link::PREVIOUS];
-        }
-        return p;
     }
 
 private:
