@@ -76,7 +76,7 @@ public:
     }
 
     size_t lastFilledIndex() const {
-        for (size_t i = N; i >= 0; i--) {
+        for (size_t i = N - 1; i >= 0; i--) {
             if (capacity[i] == true)
                 return i;
         }

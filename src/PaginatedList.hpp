@@ -205,6 +205,9 @@ private:
         size_t toFill = p->firstAvailableIndex();
         size_t toPlace = p->lastFilledIndex();
 
+        if (toFill == UINTMAX_MAX || toPlace == UINTMAX_MAX)
+            return;
+
         while (toFill < toPlace) {
             tmpItem = p->data[toPlace];
             p->data[toFill] = tmpItem;
