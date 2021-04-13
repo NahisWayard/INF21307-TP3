@@ -227,6 +227,7 @@ private:
             return;
 
         if (p == tail) {
+            tail = tail->links[PREVIOUS];
             tmp = p->links[Link::PREVIOUS];
             tmp->links[Link::NEXT] = nullptr;
             p->links[Link::NEXT] = nullptr;
