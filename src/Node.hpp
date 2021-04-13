@@ -46,30 +46,12 @@ public:
         return capacity.count();
     }
 
-    std::bitset<N> getCapacity() const {
-        return capacity;
-    }
-
-    void setBitOnCapacity(size_t pos, bool bitValue) {
-        capacity[pos] = bitValue;
-    }
-
     T &get(size_t idx) {
-        size_t offset = 0;
+        auto intIdx = getInternalIndex(idx);
 
-        for (size_t i = 0; i < capacity.size() && i < idx; i++) {
-            if (capacity[i] == false)
-                offset++;
-        }
-        return data[idx + offset];
-    }
-
-    void setDataByIndex(size_t idx, T nData) {
-        data[idx] = nData;
-    }
-
-    bool isUsed(size_t idx) const {
-        return capacity[idx];
+        if (intIdx == UINTMAX_MAX)
+            throw std::out_of_range("Out of range index");
+        return data[intIdx];
     }
 
     size_t getInternalIndex(size_t idx) {
@@ -78,17 +60,16 @@ public:
         if (capacity.all())
             return idx;
 
-        for (int i = 0; i <= idx; i++) {
+        for (size_t i = 0; i <= idx; i++) {
             if (capacity[i] == false)
                 idx++;
         }
         return idx;
     }
 
-//private:
     size_t firstAvailableIndex() const {
         for (size_t i = 0; i < N; i++) {
-            if (!capacity[i])
+            if (capacity[i] == false)
                 return i;
         }
         return UINTMAX_MAX;
@@ -96,7 +77,7 @@ public:
 
     size_t lastFilledIndex() const {
         for (size_t i = N; i >= 0; i--) {
-            if (isUsed(i) == true)
+            if (capacity[i] == true)
                 return i;
         }
         return UINTMAX_MAX;
@@ -105,9 +86,8 @@ public:
     const T *getData() const {
         return data;
     }
-public:
+
     Node<T, N> *links[2];
-private:
     std::bitset<N> capacity;
     T data[N];
 };
